@@ -35,7 +35,7 @@ for i in range (0, 3):
 model = nelder_mead.NelderMead(2,points)
 
 color = "b"
-for i in range (0, 15):
+for i in range (0, 30):
     point = model.get_next_point()
     point.cost = cost(point.coordinates[0],point.coordinates[1])
     model.set_next_point(point)

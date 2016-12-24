@@ -10,8 +10,7 @@ class NelderMeadPoint:
     def __gt__(a,b):
         return a.cost > b.cost
     def __str___(self):
-        return str(cost) + " " + str(coordinates)
-
+        return str(self.cost) + " : " + str(self.coordinates)
 
 class NelderMead:
     REFLECTION = 0.0
@@ -28,7 +27,7 @@ class NelderMead:
     def __init__(self, dimension, points):
         assert isinstance(points, list)
         assert all(isinstance(point, NelderMeadPoint) for point in points)
-        assert len(points) == dimension+1 and dimension >= 2
+        assert len(points) == dimension+1 and dimension >= 1
 
         self.state = self.REFLECTION
         self.dimension = dimension

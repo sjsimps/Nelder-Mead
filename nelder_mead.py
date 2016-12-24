@@ -1,7 +1,7 @@
 
 import numpy as np
 
-class NelderMeadPoint:
+class Point:
     def __init__(self, coordinates, cost):
         self.coordinates = coordinates
         self.cost = cost
@@ -9,25 +9,30 @@ class NelderMeadPoint:
         return a.cost < b.cost
     def __gt__(a,b):
         return a.cost > b.cost
-    def __str___(self):
-        return str(self.cost) + " : " + str(self.coordinates)
+    def __str__(self):
+        return "Cost: " + str(self.cost) + " / Coords: " + str(self.coordinates)
+    def __repr__(self):
+        return self.__str__()
 
 class NelderMead:
     REFLECTION = 0.0
     EXPANSION = 1.0
     CONTRACTION = 2.0
 
-    ALPHA = 1.0
-    GAMMA = 2.0
-    RHO = 0.5
-    THETA = 0.5
-
     REVERSE = False
 
-    def __init__(self, dimension, points):
+    def __init__(self, dimension, points,
+                 alpha=1.0, gamma=2.0, rho=0.5, theta=0.5):
         assert isinstance(points, list)
-        assert all(isinstance(point, NelderMeadPoint) for point in points)
+        assert all(isinstance(point, Point) for point in points)
+        assert all(point.coordinates.size == dimension for point in points)
         assert len(points) == dimension+1 and dimension >= 1
+
+        # Reflection, Expansion, Contraction, and Shrink coefficients:
+        self.ALPHA = alpha
+        self.GAMMA = gamma
+        self.RHO = rho
+        self.THETA = theta
 
         self.state = self.REFLECTION
         self.dimension = dimension
@@ -38,7 +43,6 @@ class NelderMead:
         self.contracted = None
         self.points = list(points)
         self.points = sorted(self.points, reverse=self.REVERSE) # SHOULD BE ASCENDING COST!!
-        print self
 
     def __str__(self):
         retval = ""
@@ -46,7 +50,7 @@ class NelderMead:
         elif self.state == self.EXPANSION: retval += "EXPANSION\n"
         elif self.state == self.CONTRACTION: retval += "CONTRACTION\n"
         for x in range (0, self.n_points):
-            retval += str(self.points[x].cost) + " : " + str(self.points[x].coordinates) + "\n"
+            retval += str(self.points[x])+"\n"
         return retval
 
     def get_next_point(self):
@@ -56,23 +60,23 @@ class NelderMead:
                 self.centroid = self.centroid + point.coordinates
             self.centroid = self.centroid*(1.0/(self.n_points))
             reflection = (self.ALPHA+1.0)*self.centroid - self.ALPHA*self.points[self.n_points-1].coordinates
-            self.reflected = NelderMeadPoint(reflection, None)
+            self.reflected = Point(reflection, None)
             return self.reflected
 
         elif self.state == self.EXPANSION:
             expansion = self.centroid + self.GAMMA*(self.reflected.coordinates - self.centroid)
-            self.expanded = NelderMeadPoint(expansion, None)
+            self.expanded = Point(expansion, None)
             return self.expanded
 
         elif self.state == self.CONTRACTION:
             contraction = self.centroid + \
                           self.RHO*(self.points[self.n_points-1].coordinates-self.centroid)
-                          
-            self.contracted = NelderMeadPoint(contraction, None)
+
+            self.contracted = Point(contraction, None)
             return self.contracted
 
     def set_next_point(self, point):
-        assert isinstance(point, NelderMeadPoint)
+        assert isinstance(point, Point)
 
         if self.state == self.REFLECTION:
             self.reflected = point

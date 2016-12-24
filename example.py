@@ -1,6 +1,6 @@
 
 import math
-import nelder_mead
+import nelder_mead as nm
 import random
 import numpy as np
 from matplotlib import cm
@@ -29,17 +29,17 @@ fig.colorbar(surf, shrink=0.5, aspect=5)
 
 # Randomly sample the cost function to provide a starting point for Nelder Mead method
 # The number of initial points is equal to the dimensionality + 1
-# This is a 2-dimensional example
+dimension = 2
 points = []
 for i in range (0, 3):
     x = random.uniform(-2,2)
     y = random.uniform(-2,2)
     z = cost(x,y)
-    points.append(nelder_mead.NelderMeadPoint(np.array([x,y]),z))
+    points.append(nm.Point(np.array([x,y]),z))
     ax.scatter(x,y,z)
 
 # Initializing the Nelder-Mead model
-model = nelder_mead.NelderMead(2,points)
+model = nm.NelderMead(dimension,points)
 
 # Iteratively minimizing cost
 for i in range (0, 30):

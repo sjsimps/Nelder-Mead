@@ -1,9 +1,9 @@
-#Nelder-Mead
+# Nelder-Mead
 
 This is an implementation of the Nelder-Mead multidimensional cost minimization algorithm.
 It is implemented in Python.
 
-###Example
+### Example
 
 ![](https://github.com/sjsimps/Nelder-Mead/blob/master/example.png)
 
@@ -15,7 +15,7 @@ points represent the values searched by the algorithm.
 The blue points indicate the results from the beginning of the search, and
 the red points show the end results.
 
-###Sample Code
+### Sample Code
 ```python
 import nelder_mead as nm
 import numpy as np

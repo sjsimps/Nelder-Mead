@@ -1,13 +1,17 @@
 
-import math
+### IMPORTS
+# Only "nelder_mead" is required for use
 import nelder_mead as nm
-import random
+
+# Additional imports used for demonstration + visualization
 import numpy as np
+import random
 from matplotlib import cm
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 ### COST FUNCTION
+# This will be minimized in this example
 
 def cost(x,y):
     return (pow(x,4) + pow(y,4) - 4*x*y)
@@ -24,6 +28,7 @@ surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm,
                        linewidth=0, antialiased=False, alpha=0.5)
 ax.set_zlim(-2.0, 25.0)
 fig.colorbar(surf, shrink=0.5, aspect=5)
+color = "b"
 
 ### NELDER-MEAD EXAMPLE
 
@@ -34,9 +39,9 @@ points = []
 for i in range (0, 3):
     x = random.uniform(-2,2)
     y = random.uniform(-2,2)
-    z = cost(x,y)
-    points.append(nm.Point(np.array([x,y]),z))
-    ax.scatter(x,y,z)
+    c = cost(x,y)
+    points.append(nm.Point([x,y],c))
+    ax.scatter(x,y,c, c=color)
 
 # Initializing the Nelder-Mead model
 model = nm.NelderMead(dimension,points)
@@ -52,7 +57,6 @@ for i in range (0, 30):
     # 3 : Return the point with updated cost back to the model
     model.set_next_point(point)
 
-    color = "b"
     if (i > 5): color = "r"
     ax.scatter(point.coordinates[0],point.coordinates[1],point.cost, c=color)
 
